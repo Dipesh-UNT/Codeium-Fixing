@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyFlix</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: white;
+    }
+    .movie-card {
+      background-color: #333333;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
+    }
+    .movie-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .movie-card:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 style="text-align: center;">MyFlix</h1>
+    <label for="search-input" style="display: none;">Search</label>
+    <input type="text" id="search-input" placeholder="Search..." style="width: 100%; padding: 10px; margin: 10px;">
+  </header>
+
+  <div class="container">
+    <div class="row" id="movie-grid">
+      <!-- Movies will be dynamically added here -->
+    </div>
+  </div>
+
+  <footer style="text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; background-color: #333333;">MyFlix - All rights reserved</footer>
+
+  <script>
+    const apiKey = '1a501fcb';
+    const movieGrid = document.getElementById('movie-grid');
+
+    // Fetch movie records from OMDb API
+    fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=movie&type=movie`)
+      .then(response => response.json())
+      .then(data => {
+        const movies = data.Search.slice(0, 16);
+        movies.forEach(movie => {
+          const movieCard = document.createElement('div');
+          movieCard.classList.add('col-md-3', 'movie-card');
+          movieCard.innerHTML = `
+            <img src="${movie.Poster}" alt="${movie.Title}">
+            <h3>${movie.Title}</h3>
+            <p>${movie.Year}</p>
+          `;
+          movieGrid.appendChild(movieCard);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching movies:', error);
+      });
+  </script>
+</body>
+</html>
